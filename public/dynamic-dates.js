@@ -1,77 +1,64 @@
 (function() {
-  function updateButtons() {
+  const updateButtons = () => {
     const now = new Date();
     const currentMonth = now.toLocaleString('default', { month: 'long' });
-    
     const nextDate = new Date();
     nextDate.setMonth(nextDate.getMonth() + 1);
     const nextMonth = nextDate.toLocaleString('default', { month: 'long' });
 
-    // Helper to find elements containing text
-    // We look for specific text "Book your" to capture the buttons
-    const findElements = (text) => {
-      const xpath = `//*[contains(text(), '${text}')]`;
-      const result = [];
-      try {
-        const nodes = document.evaluate(xpath, document, null, XPathResult.ANY_TYPE, null);
-        let node = nodes.iterateNext();
-        while (node) {
-          // Ensure we are targeting the leaf element containing the text
-          if (node.children.length === 0) {
-            result.push(node);
-          }
-          node = nodes.iterateNext();
-        }
-      } catch (e) {
-        console.error("XPath error", e);
+    // Use TreeWalker to find text nodes containing "book your" (case-insensitive)
+    const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null, false);
+    let node;
+    const candidates = [];
+    
+    while(node = walker.nextNode()) {
+      if (node.nodeValue.toLowerCase().includes('book your')) {
+        candidates.push(node);
       }
-      return result;
-    };
+    }
 
-    let buttons = findElements("Book your");
+    candidates.forEach(textNode => {
+      const element = textNode.parentElement;
+      if (!element) return;
 
-    buttons.forEach(btn => {
-        let parent = btn.parentElement;
-        let found = false;
-        let steps = 0;
-        // Traverse up to find context (Sprint or Retainer)
-        while (parent && parent !== document.body && steps < 10 && !found) {
-             const parentText = parent.textContent || "";
-             
-             if (parentText.includes("Sprint")) {
-                 const newText = `Book your ${currentMonth} Slot`;
-                 if (btn.textContent !== newText) {
-                     btn.textContent = newText;
-                 }
-                 found = true;
-             } else if (parentText.includes("Retainer")) {
-                 const newText = `Book your ${nextMonth} Slot`;
-                 if (btn.textContent !== newText) {
-                     btn.textContent = newText;
-                 }
-                 found = true;
-             }
-             parent = parent.parentElement;
-             steps++;
-        }
-        
-        // Fallback based on order if context not found
-        // Assuming first is Sprint, second is Retainer if we have exactly 2 match
-        if (!found && buttons.length === 2) {
-             if (btn === buttons[0]) {
-                 const newText = `Book your ${currentMonth} Slot`;
-                 if (btn.textContent !== newText) btn.textContent = newText;
-             } else if (btn === buttons[1]) {
-                 const newText = `Book your ${nextMonth} Slot`;
-                 if (btn.textContent !== newText) btn.textContent = newText;
-             }
-        }
+      // Check if we already updated it to avoid loops
+      // The new text will start with "→" so we can check that
+      if (element.textContent.trim().startsWith("→")) {
+          // Already updated or matches pattern, check if month needs update
+          // But we must ensure it matches the specific pattern we want
+          if ((element.textContent.includes(currentMonth) || element.textContent.includes(nextMonth)) && element.textContent.includes("⚡")) {
+              return; 
+          }
+      }
+
+      // Traverse up to find context
+      let parent = element.parentElement;
+      let foundContext = false;
+      let steps = 0;
+      
+      while (parent && steps < 10) {
+           const parentText = (parent.textContent || "").toLowerCase();
+           if (parentText.includes("sprint")) {
+               const newText = `→ Book your ${currentMonth} slot \u26A1`; // Lightning bolt emoji
+               if (element.textContent !== newText) {
+                   element.textContent = newText;
+               }
+               foundContext = true;
+               break;
+           } else if (parentText.includes("retainer")) {
+               const newText = `→ Book your ${nextMonth} slot \u26A1`; // Lightning bolt emoji
+               if (element.textContent !== newText) {
+                   element.textContent = newText;
+               }
+               foundContext = true;
+               break;
+           }
+           parent = parent.parentElement;
+           steps++;
+      }
     });
-  }
+  };
 
-  // Run on load
   window.addEventListener('load', updateButtons);
-  
-  // Run periodically to handle hydration updates or client-side routing
   setInterval(updateButtons, 500);
 })();
