@@ -1,0 +1,10 @@
+/*
+ * home (feather-icons/home@0.0.29)
+ *
+ * Learn More: https://www.framer.com/asset-urls
+ */
+
+export * from /*"https://framerusercontent.com/modules/8tFVJ9SCM5akQRM0UzVD/YkxZV5bKC4LrRDEdvAgQ/home.js"*/'blob:https://framercanvas.com/a1ff8fad-8985-41b0-abe1-d0d2dd299b5c'
+export { default } from /*"https://framerusercontent.com/modules/8tFVJ9SCM5akQRM0UzVD/YkxZV5bKC4LrRDEdvAgQ/home.js"*/'blob:https://framercanvas.com/a1ff8fad-8985-41b0-abe1-d0d2dd299b5c'
+
+//# sourceURL=https://framer.com/m/feather-icons/home.js@0.0.29

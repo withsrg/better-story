@@ -1,0 +1,10 @@
+/*
+ * House (phosphor-icons/House@0.0.57)
+ *
+ * Learn More: https://www.framer.com/asset-urls
+ */
+
+export * from /*"https://framerusercontent.com/modules/Qc8yuHkQmGO0kFiSWbkX/rVmMAFttOHuuiwSg6KjZ/House.js"*/'blob:https://framercanvas.com/2572336c-9b81-4171-8baf-6e003ced4225'
+export { default } from /*"https://framerusercontent.com/modules/Qc8yuHkQmGO0kFiSWbkX/rVmMAFttOHuuiwSg6KjZ/House.js"*/'blob:https://framercanvas.com/2572336c-9b81-4171-8baf-6e003ced4225'
+
+//# sourceURL=https://framer.com/m/phosphor-icons/House.js@0.0.57

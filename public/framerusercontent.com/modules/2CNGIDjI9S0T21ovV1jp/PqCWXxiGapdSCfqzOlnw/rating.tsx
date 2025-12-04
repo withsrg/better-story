@@ -1,0 +1,160 @@
+import { addPropertyControls, ControlType } from "framer"
+import * as React from "react"
+
+/**
+ * @framerSupportedLayoutWidth auto
+ * @framerSupportedLayoutHeight auto
+ */
+export default function StarRating(props) {
+    const {
+        rating,
+        starColor,
+        filledColor,
+        starSize,
+        textSize,
+        textWeight,
+        textColor, // New prop for text color
+        style,
+    } = props
+
+    // Ensure all whole numbers are displayed with .0
+    const formattedRating = Number.isInteger(rating)
+        ? `${rating}.0`
+        : rating.toFixed(1)
+
+    const renderStar = (index) => {
+        if (rating >= index + 1) {
+            // Full star
+            return (
+                <svg
+                    key={index}
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill={filledColor}
+                    width={`${starSize}px`}
+                    height={`${starSize}px`}
+                >
+                    <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
+                </svg>
+            )
+        } else if (rating > index && rating < index + 1) {
+            // Half-filled star
+            return (
+                <svg
+                    key={index}
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    width={`${starSize}px`}
+                    height={`${starSize}px`}
+                >
+                    <defs>
+                        <linearGradient id={`half-fill-${index}`}>
+                            <stop offset="50%" stopColor={filledColor} />
+                            <stop offset="50%" stopColor={starColor} />
+                        </linearGradient>
+                    </defs>
+                    <path
+                        fill={`url(#half-fill-${index})`}
+                        d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"
+                    />
+                </svg>
+            )
+        } else {
+            // Empty star
+            return (
+                <svg
+                    key={index}
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill={starColor}
+                    width={`${starSize}px`}
+                    height={`${starSize}px`}
+                >
+                    <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
+                </svg>
+            )
+        }
+    }
+
+    return (
+        <div
+            style={{
+                ...style,
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
+            }}
+        >
+            {/* Display the rating number */}
+            <div
+                style={{
+                    fontSize: `${textSize}px`,
+                    fontWeight: textWeight,
+                    color: textColor, // Apply the text color
+                }}
+            >
+                {formattedRating}
+            </div>
+            {/* Display the stars */}
+            <div style={{ display: "flex", gap: "4px" }}>
+                {Array.from({ length: 5 }, (_, index) => renderStar(index))}
+            </div>
+        </div>
+    )
+}
+
+StarRating.displayName = "Star Rating"
+
+// Add property controls for customizing the component in Framer
+addPropertyControls(StarRating, {
+    rating: {
+        type: ControlType.Number,
+        defaultValue: 3,
+        min: 0,
+        max: 5,
+        step: 0.1,
+        displayStepper: true,
+        title: "Rating",
+    },
+    starColor: {
+        type: ControlType.Color,
+        defaultValue: "#d3d3d3",
+        title: "Star Color",
+    },
+    filledColor: {
+        type: ControlType.Color,
+        defaultValue: "#FFD700",
+        title: "Filled Color",
+    },
+    starSize: {
+        type: ControlType.Number,
+        defaultValue: 24,
+        min: 12,
+        max: 64,
+        step: 1,
+        unit: "px",
+        title: "Star Size",
+    },
+    textSize: {
+        type: ControlType.Number,
+        defaultValue: 16,
+        min: 10,
+        max: 64,
+        step: 1,
+        unit: "px",
+        title: "Text Size",
+    },
+    textWeight: {
+        type: ControlType.Number,
+        defaultValue: 400,
+        min: 100,
+        max: 900,
+        step: 100,
+        title: "Text Weight",
+    },
+    textColor: {
+        type: ControlType.Color,
+        defaultValue: "#000000",
+        title: "Text Color",
+    },
+})
