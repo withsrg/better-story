@@ -1,5 +1,7 @@
 [build]
+  base = "."
   publish = "."
+  command = "# no build command"
 
 [[redirects]]
   from = "/*"
