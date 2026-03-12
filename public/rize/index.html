@@ -327,29 +327,29 @@
                     <p class="text-xl text-gray-400 max-w-2xl mx-auto">Five skill pillars. Most people know one. This course teaches all five.</p>
                 </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-6">
                     <!-- Cards -->
-                    <div class="glass-card p-8 rounded-2xl group reveal-up">
+                    <div class="lg:col-span-2 glass-card p-8 rounded-2xl group reveal-up">
                         <div class="text-4xl mb-6 bg-white/5 w-16 h-16 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">🏗️</div>
                         <h3 class="font-brand text-xl font-bold text-white mb-3">Build</h3>
                         <p class="text-gray-400 line-height-relaxed">Websites, landing pages, tools, products. Without a developer.</p>
                     </div>
-                    <div class="glass-card p-8 rounded-2xl group reveal-up">
+                    <div class="lg:col-span-2 glass-card p-8 rounded-2xl group reveal-up">
                         <div class="text-4xl mb-6 bg-white/5 w-16 h-16 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">✨</div>
                         <h3 class="font-brand text-xl font-bold text-white mb-3">Design</h3>
                         <p class="text-gray-400 line-height-relaxed">Brand identities, visuals, social creatives, product photography.</p>
                     </div>
-                    <div class="glass-card p-8 rounded-2xl group reveal-up">
+                    <div class="lg:col-span-2 glass-card p-8 rounded-2xl group reveal-up">
                         <div class="text-4xl mb-6 bg-white/5 w-16 h-16 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">🎬</div>
                         <h3 class="font-brand text-xl font-bold text-white mb-3">Video & Voice</h3>
                         <p class="text-gray-400 line-height-relaxed">Reels, ads, explainers, voiceovers. A content studio in your laptop.</p>
                     </div>
-                    <div class="glass-card p-8 rounded-2xl group reveal-up">
+                    <div class="lg:col-span-3 glass-card p-8 rounded-2xl group reveal-up">
                         <div class="text-4xl mb-6 bg-white/5 w-16 h-16 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">📈</div>
                         <h3 class="font-brand text-xl font-bold text-white mb-3">Market</h3>
                         <p class="text-gray-400 line-height-relaxed">SEO, content, social, email, paid ads. Growth without a team.</p>
                     </div>
-                    <div class="glass-card p-8 rounded-2xl group reveal-up">
+                    <div class="lg:col-span-3 glass-card p-8 rounded-2xl group reveal-up">
                         <div class="text-4xl mb-6 bg-white/5 w-16 h-16 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">⚡</div>
                         <h3 class="font-brand text-xl font-bold text-white mb-3">Automate</h3>
                         <p class="text-gray-400 line-height-relaxed">Workflows that run themselves. Build once, leverage forever.</p>
@@ -451,8 +451,11 @@
                         <input type="email" name="email" required class="w-full bg-dark-900 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors" placeholder="john@example.com">
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-300 mb-1">Phone Number <span class="text-gray-500 text-xs">(Optional)</span></label>
-                        <input type="tel" name="phone_number" class="w-full bg-dark-900 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors" placeholder="+91">
+                        <label class="block text-sm font-medium text-gray-300 mb-1">Phone Number</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-gray-400">+91</span>
+                            <input type="tel" name="phone_number" required pattern="[0-9]{10}" maxlength="10" title="Please enter a valid 10-digit phone number" class="w-full bg-dark-900 border border-white/10 rounded-xl pl-12 pr-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors" placeholder="9876543210">
+                        </div>
                     </div>
                     <button type="submit" class="w-full bg-brand-600 hover:bg-brand-500 text-white font-brand font-bold text-lg py-3.5 rounded-xl transition-all shadow-lg shadow-brand-500/30 mt-4 active:scale-95">
                         Confirm Registration
