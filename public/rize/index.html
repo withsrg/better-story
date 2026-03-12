@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rize | The 1-Person AI Team</title>
+    <meta name="description" content="A free 2-hour live session on using AI to do the work of a full dev, design and marketing team — solo.">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        brand: ['Plus Jakarta Sans', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f5f3ff',
+                            100: '#ede9fe',
+                            400: '#a78bfa',
+                            500: '#8b5cf6',
+                            600: '#7c3aed',
+                            900: '#4c1d95',
+                            950: '#2e1065',
+                        },
+                        dark: {
+                            900: '#0a0a0c',
+                            800: '#141418',
+                            700: '#1e1e24',
+                        }
+                    },
+                    animation: {
+                        'blob': 'blob 7s infinite',
+                        'gradient-x': 'gradient-x 15s ease infinite',
+                    },
+                    keyframes: {
+                        blob: {
+                            '0%': { transform: 'translate(0px, 0px) scale(1)' },
+                            '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
+                            '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
+                            '100%': { transform: 'translate(0px, 0px) scale(1)' },
+                        },
+                        'gradient-x': {
+                            '0%, 100%': {
+                                'background-size': '200% 200%',
+                                'background-position': 'left center'
+                            },
+                            '50%': {
+                                'background-size': '200% 200%',
+                                'background-position': 'right center'
+                            },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+    <style>
+        body {
+            background-color: #0a0a0c;
+            color: #fcfcfc;
+            overflow-x: hidden;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .glass-card:hover {
+            border-color: rgba(139, 92, 246, 0.4); /* brand-500 */
+            background: rgba(255, 255, 255, 0.05);
+            box-shadow: 0 10px 40px -10px rgba(139, 92, 246, 0.15);
+            transform: translateY(-4px);
+        }
+
+        .text-gradient {
+            background: linear-gradient(135deg, #ffffff 0%, #a78bfa 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .text-gradient-subtle {
+            background: linear-gradient(180deg, #ffffff 0%, #a1a1aa 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .btn-glow {
+            position: relative;
+        }
+        .btn-glow::before {
+            content: '';
+            position: absolute;
+            top: -2px; left: -2px; right: -2px; bottom: -2px;
+            background: linear-gradient(45deg, #8b5cf6, #3b82f6, #ec4899, #8b5cf6);
+            background-size: 400%;
+            z-index: -1;
+            border-radius: 99px;
+            filter: blur(8px);
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+            animation: gradient-x 15s ease infinite;
+        }
+        .btn-glow:hover::before {
+            opacity: 0.8;
+        }
+
+        .reveal-up {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        /* Animated Background Orbs */
+        .bg-shapes {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            overflow: hidden;
+            pointer-events: none;
+        }
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.4;
+            animation: blob 7s infinite;
+        }
+        .orb-1 {
+            top: -10%; left: -10%;
+            width: 500px; height: 500px;
+            background: rgba(139, 92, 246, 0.3); /* Purple */
+            animation-delay: 0s;
+        }
+        .orb-2 {
+            top: 40%; right: -10%;
+            width: 600px; height: 600px;
+            background: rgba(59, 130, 246, 0.2); /* Blue */
+            animation-delay: 2s;
+        }
+        .orb-3 {
+            bottom: -20%; left: 20%;
+            width: 700px; height: 700px;
+            background: rgba(236, 72, 153, 0.2); /* Pink */
+            animation-delay: 4s;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-brand-500 selection:text-white">
+
+    <!-- Ambient Background -->
+    <div class="bg-shapes">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav id="navbar" class="fixed top-0 left-0 right-0 z-50 py-4 px-6 md:px-8 transition-transform duration-300">
+        <div class="absolute inset-0 bg-dark-900/60 backdrop-blur-md border-b border-white/5"></div>
+        <div class="container mx-auto max-w-6xl flex justify-between items-center relative z-10">
+            <div class="font-brand font-bold text-2xl tracking-tighter text-white">Rize</div>
+            <button class="cta-trigger bg-white text-black font-brand font-semibold text-sm px-5 py-2.5 rounded-full hover:scale-105 hover:shadow-[0_0_20px_rgba(255,255,255,0.3)] transition-all flex items-center gap-2">
+                Register Free
+            </button>
+        </div>
+    </nav>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="relative pt-40 pb-20 md:pt-52 md:pb-32 px-6 overflow-hidden">
+            <div class="container mx-auto max-w-5xl text-center z-10 relative">
+                <div class="inline-block px-4 py-1.5 rounded-full border border-brand-500/30 bg-brand-500/10 text-brand-100 font-medium text-xs tracking-wider uppercase mb-8 reveal-up">
+                    Free Live Masterclass
+                </div>
+                <h1 class="font-brand font-extrabold text-5xl md:text-7xl lg:text-8xl tracking-tighter mb-6 text-gradient-subtle leading-[1.1] reveal-up">
+                    The 1-Person <br class="hidden md:block"/>
+                    <span class="text-gradient">AI Team</span>
+                </h1>
+                <h2 class="text-xl md:text-2xl font-medium text-gray-300 max-w-3xl mx-auto mb-4 leading-relaxed reveal-up">
+                    A free 2-hour live session on using AI to do the work of a full dev, design and marketing team — solo.
+                </h2>
+                <p class="text-gray-400 mb-12 text-base md:text-lg reveal-up">No slides. No theory. Live demos, on screen, in real time.</p>
+                
+                <div class="flex flex-col items-center gap-4 mb-20 reveal-up">
+                    <button class="cta-trigger btn-glow bg-white text-black font-brand font-bold text-lg px-8 py-4 rounded-full flex items-center gap-3 transition-transform hover:scale-105 active:scale-95 shadow-xl">
+                        Register Free — Save My Spot
+                        <i class="ph ph-arrow-right text-xl"></i>
+                    </button>
+                    <p class="text-sm text-gray-500 max-w-md">Free to attend. Paid course info shared at the end — we'll be upfront about that.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto reveal-up">
+                    <div class="glass-card p-8 rounded-2xl relative overflow-hidden group">
+                        <div class="absolute inset-0 bg-gradient-to-br from-brand-600/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                        <div class="font-brand text-4xl font-bold text-white mb-2 relative z-10">2 hrs</div>
+                        <div class="text-gray-400 text-sm relative z-10">Live demos, no fluff</div>
+                    </div>
+                    <div class="glass-card p-8 rounded-2xl relative overflow-hidden group">
+                        <div class="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                        <div class="font-brand text-4xl font-bold text-white mb-2 relative z-10">5+</div>
+                        <div class="text-gray-400 text-sm relative z-10">AI tools shown live on screen</div>
+                    </div>
+                    <div class="glass-card p-8 rounded-2xl relative overflow-hidden group">
+                        <div class="absolute inset-0 bg-gradient-to-br from-pink-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                        <div class="font-brand text-4xl font-bold text-white mb-2 relative z-10">₹0</div>
+                        <div class="text-gray-400 text-sm relative z-10">Cost to attend</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Agenda Section -->
+        <section id="agenda" class="py-24 px-6 relative">
+            <div class="container mx-auto max-w-6xl">
+                <div class="mb-16 md:mb-20 text-center md:text-left reveal-up">
+                    <span class="text-brand-400 text-sm font-bold tracking-widest uppercase mb-4 block">What We'll Cover</span>
+                    <h2 class="font-brand text-4xl md:text-5xl font-bold mb-4 text-white">What happens in 2 hours</h2>
+                    <p class="text-xl text-gray-400">Five live demos. Everything you see, you can replicate the same day.</p>
+                </div>
+
+                <div class="flex flex-col lg:flex-row gap-12 lg:gap-20">
+                    <div class="flex-1 flex flex-col gap-6">
+                        <!-- Agenda Items -->
+                        <div class="glass-card p-8 rounded-2xl flex gap-6 reveal-up">
+                            <div class="font-brand text-xl font-bold text-brand-500 mt-1">01</div>
+                            <div>
+                                <h3 class="font-brand text-xl md:text-2xl font-semibold mb-2 text-white">Build a landing page in 10 minutes</h3>
+                                <p class="text-gray-400">From a brief to a live, functional website. No developer. No code.</p>
+                            </div>
+                        </div>
+                        <div class="glass-card p-8 rounded-2xl flex gap-6 reveal-up">
+                            <div class="font-brand text-xl font-bold text-blue-400 mt-1">02</div>
+                            <div>
+                                <h3 class="font-brand text-xl md:text-2xl font-semibold mb-2 text-white">Create a brand visual kit</h3>
+                                <p class="text-gray-400">Logo concepts, social templates, product images. What a designer charges ₹15,000 for.</p>
+                            </div>
+                        </div>
+                        <div class="glass-card p-8 rounded-2xl flex gap-6 reveal-up">
+                            <div class="font-brand text-xl font-bold text-pink-400 mt-1">03</div>
+                            <div>
+                                <h3 class="font-brand text-xl md:text-2xl font-semibold mb-2 text-white">Script to finished reel in 15 mins</h3>
+                                <p class="text-gray-400">Write, voiceover, edit, done. A 30-second reel built live on screen.</p>
+                            </div>
+                        </div>
+                        <div class="glass-card p-8 rounded-2xl flex gap-6 reveal-up">
+                            <div class="font-brand text-xl font-bold text-yellow-400 mt-1">04</div>
+                            <div>
+                                <h3 class="font-brand text-xl md:text-2xl font-semibold mb-2 text-white">One month of content in 20 mins</h3>
+                                <p class="text-gray-400">Full content calendar, captions, visuals, scheduled. The whole pipeline.</p>
+                            </div>
+                        </div>
+                        <div class="glass-card p-8 rounded-2xl flex gap-6 reveal-up">
+                            <div class="font-brand text-xl font-bold text-emerald-400 mt-1">05</div>
+                            <div>
+                                <h3 class="font-brand text-xl md:text-2xl font-semibold mb-2 text-white">Automate the whole thing</h3>
+                                <p class="text-gray-400">One workflow that runs without you. No manual work.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sticky Registration Card -->
+                    <div class="w-full lg:w-[400px] mt-8 lg:mt-0">
+                        <div id="sticky-register" class="glass-card p-8 md:p-10 rounded-3xl sticky top-32 lg:translate-x-0 border-brand-500/20 shadow-[0_20px_50px_rgba(0,0,0,0.5)] bg-gradient-to-b from-dark-800/80 to-dark-900/80 reveal-up">
+                            <div class="inline-block px-3 py-1 bg-white/10 text-white text-xs font-bold rounded-full mb-6">Free Live Session</div>
+                            <h3 class="font-brand text-3xl font-bold mb-2 text-white">The 1-Person AI Team</h3>
+                            <div class="font-brand text-5xl font-extrabold text-white mb-8">₹0</div>
+                            
+                            <ul class="space-y-5 mb-8 text-gray-300">
+                                <li class="flex items-start gap-4">
+                                    <div class="bg-brand-500/20 p-2 rounded-lg text-brand-400"><i class="ph ph-clock text-xl"></i></div>
+                                    <span class="pt-1">2 hours live</span>
+                                </li>
+                                <li class="flex items-start gap-4">
+                                    <div class="bg-blue-500/20 p-2 rounded-lg text-blue-400"><i class="ph ph-video-camera text-xl"></i></div>
+                                    <span class="pt-1">Online — Zoom link sent on registration</span>
+                                </li>
+                                <li class="flex items-start gap-4">
+                                    <div class="bg-pink-500/20 p-2 rounded-lg text-pink-400"><i class="ph ph-users text-xl"></i></div>
+                                    <span class="pt-1">Limited seats</span>
+                                </li>
+                            </ul>
+
+                            <div class="bg-white/5 border-l-2 border-brand-500 p-4 rounded-r-lg text-sm text-gray-400 mb-8">
+                                <strong class="text-white">Heads up</strong> — at the end of this session, we'll share details about our paid 10-week AI course. The 2 hours before completely free.
+                            </div>
+
+                            <button class="cta-trigger w-full bg-white text-black font-brand font-bold py-4 rounded-xl hover:bg-gray-200 transition-colors shadow-lg active:scale-95 duration-200">
+                                Register My Spot
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Pillars Section -->
+        <section id="pillars" class="py-24 px-6 relative">
+            <div class="container mx-auto max-w-6xl">
+                <div class="text-center mb-16 md:mb-20 reveal-up">
+                    <span class="text-brand-400 text-sm font-bold tracking-widest uppercase mb-4 block">The Full Stack</span>
+                    <h2 class="font-brand text-4xl md:text-5xl font-bold mb-4 text-white">What an AI Operator knows</h2>
+                    <p class="text-xl text-gray-400 max-w-2xl mx-auto">Five skill pillars. Most people know one. This course teaches all five.</p>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Cards -->
+                    <div class="glass-card p-8 rounded-2xl group reveal-up">
+                        <div class="text-4xl mb-6 bg-white/5 w-16 h-16 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">🏗️</div>
+                        <h3 class="font-brand text-xl font-bold text-white mb-3">Build</h3>
+                        <p class="text-gray-400 line-height-relaxed">Websites, landing pages, tools, products. Without a developer.</p>
+                    </div>
+                    <div class="glass-card p-8 rounded-2xl group reveal-up">
+                        <div class="text-4xl mb-6 bg-white/5 w-16 h-16 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">✨</div>
+                        <h3 class="font-brand text-xl font-bold text-white mb-3">Design</h3>
+                        <p class="text-gray-400 line-height-relaxed">Brand identities, visuals, social creatives, product photography.</p>
+                    </div>
+                    <div class="glass-card p-8 rounded-2xl group reveal-up">
+                        <div class="text-4xl mb-6 bg-white/5 w-16 h-16 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">🎬</div>
+                        <h3 class="font-brand text-xl font-bold text-white mb-3">Video & Voice</h3>
+                        <p class="text-gray-400 line-height-relaxed">Reels, ads, explainers, voiceovers. A content studio in your laptop.</p>
+                    </div>
+                    <div class="glass-card p-8 rounded-2xl group reveal-up">
+                        <div class="text-4xl mb-6 bg-white/5 w-16 h-16 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">📈</div>
+                        <h3 class="font-brand text-xl font-bold text-white mb-3">Market</h3>
+                        <p class="text-gray-400 line-height-relaxed">SEO, content, social, email, paid ads. Growth without a team.</p>
+                    </div>
+                    <div class="glass-card p-8 rounded-2xl group reveal-up">
+                        <div class="text-4xl mb-6 bg-white/5 w-16 h-16 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">⚡</div>
+                        <h3 class="font-brand text-xl font-bold text-white mb-3">Automate</h3>
+                        <p class="text-gray-400 line-height-relaxed">Workflows that run themselves. Build once, leverage forever.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Who For Section -->
+        <section id="who-for" class="py-24 px-6 relative bg-white/[0.02]">
+            <div class="absolute inset-0 border-y border-white/5"></div>
+            <div class="container mx-auto max-w-6xl relative z-10">
+                <div class="text-center mb-16 reveal-up">
+                    <span class="text-brand-400 text-sm font-bold tracking-widest uppercase mb-4 block">Who This Is For</span>
+                    <h2 class="font-brand text-3xl md:text-5xl font-bold text-white">Built for people who want to run something.</h2>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="glass-card p-8 md:p-10 rounded-2xl flex flex-col h-full reveal-up">
+                        <h3 class="font-brand text-2xl font-bold text-white mb-4">The Founder</h3>
+                        <p class="text-gray-400 flex-grow mb-8">You're building something and spending too much on developers, designers, and agencies. Or you're about to start.</p>
+                        <div class="pt-6 border-t border-white/10 text-brand-300 font-medium flex items-center gap-2 text-sm">
+                            <i class="ph ph-arrow-right"></i>
+                            Build/market products without a full team
+                        </div>
+                    </div>
+                    <div class="glass-card p-8 md:p-10 rounded-2xl flex flex-col h-full reveal-up">
+                        <h3 class="font-brand text-2xl font-bold text-white mb-4">The Freelancer</h3>
+                        <p class="text-gray-400 flex-grow mb-8">You want to offer more services, charge more, and deliver faster. AI makes you a one-person agency.</p>
+                        <div class="pt-6 border-t border-white/10 text-blue-300 font-medium flex items-center gap-2 text-sm">
+                            <i class="ph ph-arrow-right"></i>
+                            Charge ₹50K–1.5L/month solo
+                        </div>
+                    </div>
+                    <div class="glass-card p-8 md:p-10 rounded-2xl flex flex-col h-full reveal-up">
+                        <h3 class="font-brand text-2xl font-bold text-white mb-4">The Professional</h3>
+                        <p class="text-gray-400 flex-grow mb-8">You're employed but want to be the most valuable person in any room. AI fluency is the new career moat.</p>
+                        <div class="pt-6 border-t border-white/10 text-pink-300 font-medium flex items-center gap-2 text-sm">
+                            <i class="ph ph-arrow-right"></i>
+                            Become the operator everyone wants
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Final CTA -->
+        <section class="py-32 px-6 relative overflow-hidden">
+            <div class="absolute inset-0 bg-gradient-to-b from-transparent to-brand-900/20 z-0"></div>
+            <div class="container mx-auto max-w-4xl text-center relative z-10 reveal-up">
+                <h2 class="font-brand text-5xl md:text-7xl font-extrabold mb-8 leading-tight text-white">
+                    One person.<br>
+                    The right tools.<br>
+                    <span class="text-gradient">Unlimited leverage.</span>
+                </h2>
+                <p class="text-xl text-gray-400 mb-12">Register for the free webinar. Show up. See it live.</p>
+                <button class="cta-trigger btn-glow bg-white text-black font-brand font-bold text-lg px-8 py-4 rounded-full inline-flex items-center gap-3 transition-transform hover:scale-105 active:scale-95 shadow-2xl">
+                    Register Free — Save My Spot
+                    <i class="ph ph-arrow-right text-xl"></i>
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <footer class="py-8 text-center border-t border-white/10 text-gray-500 text-sm">
+        <div class="container mx-auto">
+            <p>&copy; <span id="year"></span> Better Story. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Registration Modal -->
+    <div id="reg-modal" class="fixed inset-0 z-[100] flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300">
+        <!-- Backdrop -->
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm modal-backdrop"></div>
+        
+        <!-- Modal Content -->
+        <div class="relative bg-dark-800 border border-white/10 w-full max-w-md rounded-3xl p-8 sm:p-10 shadow-2xl transform scale-95 transition-transform duration-300 modal-panel">
+            <button class="close-modal absolute top-4 right-4 text-gray-400 hover:text-white hover:bg-white/10 p-2 rounded-full transition-colors">
+                <i class="ph ph-x text-2xl"></i>
+            </button>
+            
+            <div id="modal-form-container">
+                <div class="text-center mb-8">
+                    <h3 class="font-brand text-3xl font-bold text-white mb-2">Save Your Spot</h3>
+                    <p class="text-gray-400 text-sm">Enter your details to register for the free live session.</p>
+                </div>
+                
+                <form id="reg-form" class="space-y-4" name="rize-registration" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+                    <input type="hidden" name="form-name" value="rize-registration" />
+                    <p class="hidden">
+                        <label>Don’t fill this out if you're human: <input name="bot-field" /></label>
+                    </p>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-1">First Name</label>
+                        <input type="text" name="first_name" required class="w-full bg-dark-900 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors" placeholder="John">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-1">Email Address</label>
+                        <input type="email" name="email" required class="w-full bg-dark-900 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors" placeholder="john@example.com">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-1">Phone Number <span class="text-gray-500 text-xs">(Optional)</span></label>
+                        <input type="tel" name="phone_number" class="w-full bg-dark-900 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-colors" placeholder="+91">
+                    </div>
+                    <button type="submit" class="w-full bg-brand-600 hover:bg-brand-500 text-white font-brand font-bold text-lg py-3.5 rounded-xl transition-all shadow-lg shadow-brand-500/30 mt-4 active:scale-95">
+                        Confirm Registration
+                    </button>
+                </form>
+            </div>
+
+            <div id="modal-success" class="hidden flex-col items-center justify-center text-center py-6">
+                <div class="w-16 h-16 bg-emerald-500/20 text-emerald-400 rounded-full flex items-center justify-center text-3xl mb-6">
+                    <i class="ph ph-check-circle"></i>
+                </div>
+                <h3 class="font-brand text-2xl font-bold text-white mb-2">You're In!</h3>
+                <p class="text-gray-400 text-sm mb-8">Check your email for the Zoom link and calendar invite. See you inside.</p>
+                <button class="close-modal-btn w-full bg-white text-black font-brand font-bold py-3 rounded-xl hover:bg-gray-200 transition-colors">
+                    Done
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Dynamic Year
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        // Navbar Scroll Effect
+        const navbar = document.getElementById('navbar');
+        let lastScroll = 0;
+        window.addEventListener('scroll', () => {
+            const currentScroll = window.pageYOffset;
+            if (currentScroll > 100 && currentScroll > lastScroll) {
+                navbar.style.transform = 'translateY(-100%)';
+            } else {
+                navbar.style.transform = 'translateY(0)';
+            }
+            lastScroll = currentScroll;
+        });
+
+        // GSAP Animations
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Reveal Up Animation for elements with .reveal-up class
+        gsap.utils.toArray('.reveal-up').forEach((elem) => {
+            gsap.fromTo(elem, 
+                { autoAlpha: 0, y: 50 }, 
+                {
+                    duration: 0.8, 
+                    autoAlpha: 1, 
+                    y: 0, 
+                    ease: "power3.out",
+                    scrollTrigger: {
+                        trigger: elem,
+                        start: "top 85%",
+                        toggleActions: "play none none reverse"
+                    }
+                }
+            );
+        });
+
+        // Modal Logic
+        const modal = document.getElementById('reg-modal');
+        const modalPanel = document.querySelector('.modal-panel');
+        const backdrop = document.querySelector('.modal-backdrop');
+        const triggers = document.querySelectorAll('.cta-trigger');
+        const form = document.getElementById('reg-form');
+        const formContainer = document.getElementById('modal-form-container');
+        const successContainer = document.getElementById('modal-success');
+
+        function openModal() {
+            modal.classList.remove('pointer-events-none', 'opacity-0');
+            modalPanel.classList.remove('scale-95');
+            modalPanel.classList.add('scale-100');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            modal.classList.add('pointer-events-none', 'opacity-0');
+            modalPanel.classList.remove('scale-100');
+            modalPanel.classList.add('scale-95');
+            document.body.style.overflow = '';
+            
+            setTimeout(() => {
+                form.reset();
+                formContainer.classList.remove('hidden');
+                successContainer.classList.add('hidden');
+                successContainer.classList.remove('flex');
+            }, 300);
+        }
+
+        triggers.forEach(btn => btn.addEventListener('click', openModal));
+        
+        document.querySelectorAll('.close-modal, .close-modal-btn').forEach(btn => {
+            btn.addEventListener('click', closeModal);
+        });
+        
+        backdrop.addEventListener('click', closeModal);
+
+        // Form Submit
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const submitBtn = form.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerText;
+            submitBtn.innerText = "Registering...";
+            submitBtn.disabled = true;
+
+            const formData = new FormData(form);
+
+            fetch("/", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: new URLSearchParams(formData).toString()
+            })
+            .then(() => {
+                formContainer.classList.add('hidden');
+                successContainer.classList.remove('hidden');
+                successContainer.classList.add('flex');
+                
+                // Trigger a little celebration bounce
+                gsap.fromTo(successContainer.querySelector('.w-16'),
+                    { scale: 0 },
+                    { scale: 1, duration: 0.6, ease: "elastic.out(1, 0.5)", delay: 0.1 }
+                );
+            })
+            .catch((error) => {
+                alert("Something went wrong. Please try again or contact support.");
+                console.error(error);
+            })
+            .finally(() => {
+                submitBtn.innerText = originalText;
+                submitBtn.disabled = false;
+            });
+        });
+    </script>
+</body>
+</html>
